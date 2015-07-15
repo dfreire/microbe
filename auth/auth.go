@@ -3,13 +3,13 @@ package auth
 import "errors"
 
 type Auth interface {
-	signUp(app, email string, password string) (signUpToken string, err error)
+	signUp(app, email string, password []byte) (signUpToken string, err error)
 	confirmSignUp(signUpToken string) error
-	signIn(app, email string, password string) (sessionToken string, err error)
+	signIn(app, email string, password []byte) (sessionToken string, err error)
 	requestResetPasswordToken(app, email string) (resetPasswordToken string, err error)
 	resetPassword(resetPasswordToken string) error
-	changeEmail(sessionToken string, password string, newEmail string) error
-	changePassword(sessionToken string, oldPassword string, newPassword string) error
+	changeEmail(sessionToken string, password []byte, newEmail string) error
+	changePassword(sessionToken string, oldpassword []byte, newpassword []byte) error
 }
 
 type impl struct {
@@ -22,7 +22,7 @@ func New(store store) Auth {
 	}
 }
 
-func (self impl) signUp(app, email string, password string) (signUpToken string, err error) {
+func (self impl) signUp(app, email string, password []byte) (signUpToken string, err error) {
 	if err = self.assertCanCreateUser(app, email); err != nil {
 		return "", err
 	}
@@ -63,7 +63,7 @@ func (self impl) confirmSignUp(signUpToken string) error {
 	return nil
 }
 
-func (self impl) signIn(app, email string, password string) (sessionToken string, err error) {
+func (self impl) signIn(app, email string, password []byte) (sessionToken string, err error) {
 	return "", nil
 }
 
@@ -75,11 +75,11 @@ func (self impl) resetPassword(resetPasswordToken string) error {
 	return nil
 }
 
-func (self impl) changeEmail(sessionToken string, password string, newEmail string) error {
+func (self impl) changeEmail(sessionToken string, password []byte, newEmail string) error {
 	return nil
 }
 
-func (self impl) changePassword(sessionToken string, oldPassword string, newPassword string) error {
+func (self impl) changePassword(sessionToken string, oldpassword []byte, newpassword []byte) error {
 	return nil
 }
 
