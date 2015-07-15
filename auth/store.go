@@ -4,7 +4,7 @@ type store interface {
 	createUser(user User) error
 	hasUserWithEmail(email string) (bool, error)
 
-	getPendingUser(email string) (PendingUser, error)
-	putPendingUser(email string, password string) error
-	delPendingUser(email string) error
+	getUnconfirmedUser(email string) (UnconfirmedUser, error)
+	putUnconfirmedUser(email string, password string) error
+	delUnconfirmedUser(email string) error
 }

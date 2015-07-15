@@ -5,4 +5,4 @@ type User struct {
 	password string
 }
 
-type PendingUser User
+type UnconfirmedUser User

@@ -32,7 +32,7 @@ func (self impl) signUp(email string, password string) (signUpToken string, err 
 		return "", err
 	}
 
-	if err = self.store.putPendingUser(email, password); err != nil {
+	if err = self.store.putUnconfirmedUser(email, password); err != nil {
 		return "", err
 	}
 
@@ -49,16 +49,16 @@ func (self impl) confirmSignUp(signUpToken string) error {
 		return err
 	}
 
-	pendingUser, err := self.store.getPendingUser(email)
+	UnconfirmedUser, err := self.store.getUnconfirmedUser(email)
 	if err != nil {
 		return err
 	}
 
-	if err = self.store.createUser(User(pendingUser)); err != nil {
+	if err = self.store.createUser(User(UnconfirmedUser)); err != nil {
 		return err
 	}
 
-	err = self.store.delPendingUser(email)
+	err = self.store.delUnconfirmedUser(email)
 
 	return nil
 }
