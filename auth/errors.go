@@ -1,8 +1,6 @@
-package Auth
-
-import "errors"
+package auth
 
 const (
-	EntityNotFound   error = errors.New("The entity was not found.")
-	EmailAlreadyUsed error = errors.New("The email is already being used.")
+	ErrEntityNotFound   string = "The entity was not found."
+	ErrEmailAlreadyUsed string = "The email is already being used."
 )

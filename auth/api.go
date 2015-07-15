@@ -1,5 +1,7 @@
 package auth
 
+import "errors"
+
 type Auth interface {
 	signUp(email string, password string) (signUpToken string, err error)
 	confirmSignUp(signUpToken string) error
@@ -21,17 +23,34 @@ func New(store store) Auth {
 }
 
 func (self impl) signUp(email string, password string) (signUpToken string, err error) {
-	hasUserWithEmail, err := self.store.hasUserWithEmail(email)
-	if err != nil {
+	if err = self.assertCanCreateUser(email); err != nil {
 		return "", err
-	} else if hasUserWithEmail {
-		return "", EmailAlreadyUsed
 	}
 
 	return "", nil
 }
 
+func (self impl) assertCanCreateUser(email string) error {
+	hasUserWithEmail, err := self.store.hasUserWithEmail(email)
+	if err != nil {
+		return err
+	} else if hasUserWithEmail {
+		return errors.New(ErrEmailAlreadyUsed)
+	}
+
+	return nil
+}
+
 func (self impl) confirmSignUp(signUpToken string) error {
+	if err := self.assertCanCreateUser(email); err != nil {
+		return err
+	}
+
+	pendingUser, err := self.store.getPendingUser(email)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
