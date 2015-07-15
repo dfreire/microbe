@@ -3,10 +3,10 @@ package auth
 import "errors"
 
 type Auth interface {
-	signUp(email string, password string) (signUpToken string, err error)
+	signUp(app, email string, password string) (signUpToken string, err error)
 	confirmSignUp(signUpToken string) error
-	signIn(email string, password string) (sessionToken string, err error)
-	requestResetPasswordToken(email string) (resetPasswordToken string, err error)
+	signIn(app, email string, password string) (sessionToken string, err error)
+	requestResetPasswordToken(app, email string) (resetPasswordToken string, err error)
 	resetPassword(resetPasswordToken string) error
 	changeEmail(sessionToken string, password string, newEmail string) error
 	changePassword(sessionToken string, oldPassword string, newPassword string) error
@@ -22,17 +22,17 @@ func New(store store) Auth {
 	}
 }
 
-func (self impl) signUp(email string, password string) (signUpToken string, err error) {
-	if err = self.assertCanCreateUser(email); err != nil {
+func (self impl) signUp(app, email string, password string) (signUpToken string, err error) {
+	if err = self.assertCanCreateUser(app, email); err != nil {
 		return "", err
 	}
 
-	signUpToken, err = createSignUpToken(email)
+	signUpToken, err = createSignUpToken(app, email)
 	if err != nil {
 		return "", err
 	}
 
-	if err = self.store.putUnconfirmedUser(email, password); err != nil {
+	if err = self.store.createUnconfirmedUser(UnconfirmedUser{app, email, password}); err != nil {
 		return "", err
 	}
 
@@ -40,34 +40,34 @@ func (self impl) signUp(email string, password string) (signUpToken string, err 
 }
 
 func (self impl) confirmSignUp(signUpToken string) error {
-	email, err := parseSignUpToken(signUpToken)
+	app, email, err := parseSignUpToken(signUpToken)
 	if err != nil {
 		return err
 	}
 
-	if err := self.assertCanCreateUser(email); err != nil {
+	if err := self.assertCanCreateUser(app, email); err != nil {
 		return err
 	}
 
-	UnconfirmedUser, err := self.store.getUnconfirmedUser(email)
+	unconfirmedUser, err := self.store.findUnconfirmedUser(app, email)
 	if err != nil {
 		return err
 	}
 
-	if err = self.store.createUser(User(UnconfirmedUser)); err != nil {
+	if err = self.store.createUser(User(unconfirmedUser)); err != nil {
 		return err
 	}
 
-	err = self.store.delUnconfirmedUser(email)
+	err = self.store.removeUnconfirmedUser(unconfirmedUser)
 
 	return nil
 }
 
-func (self impl) signIn(email string, password string) (sessionToken string, err error) {
+func (self impl) signIn(app, email string, password string) (sessionToken string, err error) {
 	return "", nil
 }
 
-func (self impl) requestResetPasswordToken(email string) (resetPasswordToken string, err error) {
+func (self impl) requestResetPasswordToken(app, email string) (resetPasswordToken string, err error) {
 	return "", nil
 }
 
@@ -83,21 +83,21 @@ func (self impl) changePassword(sessionToken string, oldPassword string, newPass
 	return nil
 }
 
-func (self impl) assertCanCreateUser(email string) error {
-	hasUserWithEmail, err := self.store.hasUserWithEmail(email)
+func (self impl) assertCanCreateUser(app, email string) error {
+	exists, err := self.store.existsUser(app, email)
 	if err != nil {
 		return err
-	} else if hasUserWithEmail {
-		return errors.New(ErrEmailAlreadyUsed)
+	} else if exists {
+		return errors.New(ErrUserAlreadyExists)
 	}
 
 	return nil
 }
 
-func createSignUpToken(email string) (signUpToken string, err error) {
+func createSignUpToken(app, email string) (signUpToken string, err error) {
 	return "", nil
 }
 
-func parseSignUpToken(signUpToken string) (email string, err error) {
-	return "", nil
+func parseSignUpToken(signUpToken string) (app, email string, err error) {
+	return "", "", nil
 }
