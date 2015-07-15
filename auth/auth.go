@@ -5,11 +5,13 @@ import "errors"
 type Auth interface {
 	signUp(app, email string, password []byte) (signUpToken string, err error)
 	confirmSignUp(signUpToken string) error
-	signIn(app, email string, password []byte) (sessionToken string, err error)
+
 	requestResetPasswordToken(app, email string) (resetPasswordToken string, err error)
-	resetPassword(resetPasswordToken string) error
+	resetPassword(resetPasswordToken string, newPassword []byte) error
+
+	signIn(app, email string, password []byte) (sessionToken string, err error)
 	changeEmail(sessionToken string, password []byte, newEmail string) error
-	changePassword(sessionToken string, oldpassword []byte, newpassword []byte) error
+	changePassword(sessionToken string, oldPassword []byte, newPassword []byte) error
 }
 
 type impl struct {
@@ -63,23 +65,23 @@ func (self impl) confirmSignUp(signUpToken string) error {
 	return nil
 }
 
-func (self impl) signIn(app, email string, password []byte) (sessionToken string, err error) {
-	return "", nil
-}
-
 func (self impl) requestResetPasswordToken(app, email string) (resetPasswordToken string, err error) {
 	return "", nil
 }
 
-func (self impl) resetPassword(resetPasswordToken string) error {
+func (self impl) resetPassword(resetPasswordToken string, newPassword []byte) error {
 	return nil
+}
+
+func (self impl) signIn(app, email string, password []byte) (sessionToken string, err error) {
+	return "", nil
 }
 
 func (self impl) changeEmail(sessionToken string, password []byte, newEmail string) error {
 	return nil
 }
 
-func (self impl) changePassword(sessionToken string, oldpassword []byte, newpassword []byte) error {
+func (self impl) changePassword(sessionToken string, oldPassword []byte, newPassword []byte) error {
 	return nil
 }
 
