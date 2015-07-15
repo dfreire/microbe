@@ -1,9 +1,5 @@
 package auth
 
-import (
-	"errors"
-)
-
 type Auth interface {
 	signUp(email string, password string) (signUpToken string, err error)
 	confirmSignUp(signUpToken string) error
@@ -29,7 +25,7 @@ func (self impl) signUp(email string, password string) (signUpToken string, err 
 	if err != nil {
 		return "", err
 	} else if hasUserWithEmail {
-		return "", errors.New("This email is aleady being used.")
+		return "", EmailAlreadyUsed
 	}
 
 	return "", nil
