@@ -1,9 +1,18 @@
 package auth
 
+import "time"
+
 type User struct {
-	app      string
-	email    string
-	password []byte
+	id          interface{}
+	domain      string
+	email       string
+	password    []byte
+	createdAt   time.Time
+	isConfirmed bool
 }
 
-type UnconfirmedUser User
+type Session struct {
+	domain    string
+	userId    interface{}
+	createdAt time.Time
+}

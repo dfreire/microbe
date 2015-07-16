@@ -1,40 +1,58 @@
 package auth
 
-import "errors"
+import (
+	"errors"
+	"time"
+)
 
 type Auth interface {
-	signUp(app, email string, password []byte) (signUpToken string, err error)
+	signUp(domain, email string, password []byte) (signUpToken string, err error)
 	confirmSignUp(signUpToken string) error
 
-	requestResetPasswordToken(app, email string) (resetPasswordToken string, err error)
+	requestResetPasswordToken(domain, email string) (resetPasswordToken string, err error)
 	resetPassword(resetPasswordToken string, newPassword []byte) error
 
-	signIn(app, email string, password []byte) (sessionToken string, err error)
+	signIn(domain, email string, password []byte) (sessionToken string, err error)
 	changeEmail(sessionToken string, password []byte, newEmail string) error
 	changePassword(sessionToken string, oldPassword []byte, newPassword []byte) error
+
+	//getAllUsers(adminToken string) ([]User, error)
+	//getUser(domain, email string) (User, error)
+	//createUsers(adminToken, users []User) error
+	//updateUsers(adminToken, users []User) error
+	//removeUsers(adminToken, users []User) error
 }
 
 type impl struct {
-	store store
+	store      store
+	adminToken string
 }
 
-func New(store store) Auth {
+func New(store store, adminToken string) Auth {
 	return &impl{
-		store: store,
+		store:      store,
+		adminToken: adminToken,
 	}
 }
 
-func (self impl) signUp(app, email string, password []byte) (signUpToken string, err error) {
-	if err = self.assertCanCreateUser(app, email); err != nil {
+func (self impl) signUp(domain, email string, password []byte) (signUpToken string, err error) {
+	if err = self.assertCanCreateUser(domain, email); err != nil {
 		return "", err
 	}
 
-	signUpToken, err = createSignUpToken(app, email)
+	signUpToken, err = createSignUpToken(domain, email)
 	if err != nil {
 		return "", err
 	}
 
-	if err = self.store.createUnconfirmedUser(UnconfirmedUser{app, email, password}); err != nil {
+	user := User{
+		domain:      domain,
+		email:       email,
+		password:    password,
+		createdAt:   time.Now(),
+		isConfirmed: false,
+	}
+	if err = self.store.createUser(user); err != nil {
 		return "", err
 	}
 
@@ -42,30 +60,29 @@ func (self impl) signUp(app, email string, password []byte) (signUpToken string,
 }
 
 func (self impl) confirmSignUp(signUpToken string) error {
-	app, email, err := parseSignUpToken(signUpToken)
+	domain, email, err := parseSignUpToken(signUpToken)
 	if err != nil {
 		return err
 	}
 
-	if err := self.assertCanCreateUser(app, email); err != nil {
+	if err := self.assertCanCreateUser(domain, email); err != nil {
 		return err
 	}
 
-	unconfirmedUser, err := self.store.findUnconfirmedUser(app, email)
+	user, err := self.store.getUser(domain, email)
 	if err != nil {
 		return err
 	}
 
-	if err = self.store.createUser(User(unconfirmedUser)); err != nil {
+	user.isConfirmed = true
+	if err = self.store.updateUser(user); err != nil {
 		return err
 	}
-
-	err = self.store.removeUnconfirmedUser(unconfirmedUser)
 
 	return nil
 }
 
-func (self impl) requestResetPasswordToken(app, email string) (resetPasswordToken string, err error) {
+func (self impl) requestResetPasswordToken(domain, email string) (resetPasswordToken string, err error) {
 	return "", nil
 }
 
@@ -73,7 +90,7 @@ func (self impl) resetPassword(resetPasswordToken string, newPassword []byte) er
 	return nil
 }
 
-func (self impl) signIn(app, email string, password []byte) (sessionToken string, err error) {
+func (self impl) signIn(domain, email string, password []byte) (sessionToken string, err error) {
 	return "", nil
 }
 
@@ -85,21 +102,21 @@ func (self impl) changePassword(sessionToken string, oldPassword []byte, newPass
 	return nil
 }
 
-func (self impl) assertCanCreateUser(app, email string) error {
-	exists, err := self.store.existsUser(app, email)
+func (self impl) assertCanCreateUser(domain, email string) error {
+	user, err := self.store.getUser(domain, email)
 	if err != nil {
 		return err
 	} else if exists {
-		return errors.New(ErrUserAlreadyExists)
+		return errors.New(ErrEquivalentEntityExists)
 	}
 
 	return nil
 }
 
-func createSignUpToken(app, email string) (signUpToken string, err error) {
+func createSignUpToken(domain, email string) (signUpToken string, err error) {
 	return "", nil
 }
 
-func parseSignUpToken(signUpToken string) (app, email string, err error) {
+func parseSignUpToken(signUpToken string) (domain, email string, err error) {
 	return "", "", nil
 }
