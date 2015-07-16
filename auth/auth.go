@@ -65,10 +65,6 @@ func (self impl) confirmSignUp(signUpToken string) error {
 		return err
 	}
 
-	if err := self.assertCanCreateUser(domain, email); err != nil {
-		return err
-	}
-
 	user, err := self.store.getUser(domain, email)
 	if err != nil {
 		return err
@@ -103,14 +99,16 @@ func (self impl) changePassword(sessionToken string, oldPassword []byte, newPass
 }
 
 func (self impl) assertCanCreateUser(domain, email string) error {
-	user, err := self.store.getUser(domain, email)
+	_, err := self.store.getUser(domain, email)
 	if err != nil {
-		return err
-	} else if exists {
-		return errors.New(ErrEquivalentEntityExists)
+		if err.Error() == ErrEntityNotFound {
+			return nil
+		} else {
+			return err
+		}
 	}
 
-	return nil
+	return errors.New(ErrEntityAlreadyExists)
 }
 
 func createSignUpToken(domain, email string) (signUpToken string, err error) {
