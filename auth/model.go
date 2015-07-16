@@ -3,16 +3,15 @@ package auth
 import "time"
 
 type User struct {
-	id          interface{}
-	domain      string
-	email       string
+	Id          interface{}
+	CreatedAt   time.Time
+	Domain      string
+	Email       string
 	password    []byte
-	createdAt   time.Time
 	isConfirmed bool
 }
 
 type Session struct {
-	domain    string
-	userId    interface{}
-	createdAt time.Time
+	UserId    interface{}
+	CreatedAt time.Time
 }

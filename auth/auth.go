@@ -46,10 +46,10 @@ func (self impl) signUp(domain, email string, password []byte) (signUpToken stri
 	}
 
 	user := User{
-		domain:      domain,
-		email:       email,
+		CreatedAt:   time.Now(),
+		Domain:      domain,
+		Email:       email,
 		password:    password,
-		createdAt:   time.Now(),
 		isConfirmed: false,
 	}
 	if err = self.store.createUser(user); err != nil {
@@ -71,7 +71,7 @@ func (self impl) confirmSignUp(signUpToken string) error {
 	}
 
 	user.isConfirmed = true
-	if err = self.store.updateUser(user); err != nil {
+	if err = self.store.updateUser(user, []string{"isConfirmed"}); err != nil {
 		return err
 	}
 
