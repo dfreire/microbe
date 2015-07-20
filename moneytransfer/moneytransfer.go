@@ -1,5 +1,7 @@
 package moneytransfer
 
+import "fmt"
+
 type MoneyTransfer interface {
 	transfer(originAccountId, destinationAccountId string, amount int) error
 }
@@ -22,6 +24,11 @@ func (self impl) transfer(originAccountId, destinationAccountId string, amount i
 		return err
 	}
 
+	// validate balance
+	if origin.balance < amount {
+		return fmt.Errorf("Error: Insufficient funds!")
+	}
+
 	destination, err := self.store.getAccount(destinationAccountId)
 	if err != nil {
 		return err
@@ -29,5 +36,10 @@ func (self impl) transfer(originAccountId, destinationAccountId string, amount i
 
 	origin.balance -= amount
 	destination.balance += amount
+
+	// problem:
+	// if between the "validate balance" comment above and the update(...) call
+	// the origin account's balance changes to less than amount
+	// this method should fail, but it does not
 	return self.store.update([]Account{origin, destination})
 }
