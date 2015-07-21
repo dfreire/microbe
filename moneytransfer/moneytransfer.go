@@ -32,8 +32,8 @@ func (self impl) transfer(fromAccountId, toAccountId string, amount int) error {
 	mt := MoneyTransfer{fromAccountId: fromAccountId, toAccountId: toAccountId, ammout: amount}
 
 	// problem:
-	// if between the "validate balance" comment above and the update(...) call
-	// the origin account's balance changes to less than amount
+	// if between the "validate balance" comment above and the createMoneyTransfer(...) call bellow
+	// the fromAccount's balance changes to less than amount
 	// this method should fail, but it does not
 	return self.store.createMoneyTransfer(mt)
 }
