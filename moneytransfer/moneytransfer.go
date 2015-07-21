@@ -19,12 +19,12 @@ func New(store store, adminToken string) Service {
 }
 
 func (self impl) transfer(fromAccountId, toAccountId string, amount int) error {
+	// validate balance
 	balance, err := self.store.getAccountBalance(fromAccountId)
 	if err != nil {
 		return err
 	}
 
-	// validate balance
 	if balance < amount {
 		return fmt.Errorf("Error: Insufficient funds!")
 	}
