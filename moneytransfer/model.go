@@ -1,6 +1,11 @@
 package moneytransfer
 
 type Account struct {
-	Id      interface{}
-	balance int
+	Id string
+}
+
+type MoneyTransfer struct {
+	fromAccountId string
+	toAccountId   string
+	ammout        int
 }
