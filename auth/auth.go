@@ -6,21 +6,21 @@ import (
 )
 
 type Auth interface {
-	signUp(domain, email string, password []byte) (signUpToken string, err error)
-	confirmSignUp(signUpToken string) error
+	SignUp(domain, email string, password []byte) (signUpToken string, err error)
+	ConfirmSignUp(signUpToken string) error
 
-	requestResetPasswordToken(domain, email string) (resetPasswordToken string, err error)
-	resetPassword(resetPasswordToken string, newPassword []byte) error
+	RequestResetPasswordToken(domain, email string) (resetPasswordToken string, err error)
+	ResetPassword(resetPasswordToken string, newPassword []byte) error
 
-	signIn(domain, email string, password []byte) (sessionToken string, err error)
-	changeEmail(sessionToken string, password []byte, newEmail string) error
-	changePassword(sessionToken string, oldPassword []byte, newPassword []byte) error
+	SignIn(domain, email string, password []byte) (sessionToken string, err error)
+	ChangeEmail(sessionToken string, password []byte, newEmail string) error
+	ChangePassword(sessionToken string, oldPassword []byte, newPassword []byte) error
 
-	//getAllUsers(adminToken string) ([]User, error)
-	//getUser(domain, email string) (User, error)
-	//createUsers(adminToken, users []User) error
-	//updateUsers(adminToken, users []User) error
-	//removeUsers(adminToken, users []User) error
+	//GetAllUsers(adminToken string) ([]User, error)
+	//GetUser(domain, email string) (User, error)
+	//CreateUsers(adminToken, users []User) error
+	//UpdateUsers(adminToken, users []User) error
+	//RemoveUsers(adminToken, users []User) error
 }
 
 type impl struct {
@@ -35,7 +35,7 @@ func New(store store, adminToken string) Auth {
 	}
 }
 
-func (self impl) signUp(domain, email string, password []byte) (signUpToken string, err error) {
+func (self impl) SignUp(domain, email string, password []byte) (signUpToken string, err error) {
 	if err = self.assertCanCreateUser(domain, email); err != nil {
 		return "", err
 	}
@@ -59,7 +59,7 @@ func (self impl) signUp(domain, email string, password []byte) (signUpToken stri
 	return signUpToken, nil
 }
 
-func (self impl) confirmSignUp(signUpToken string) error {
+func (self impl) ConfirmSignUp(signUpToken string) error {
 	domain, email, err := parseSignUpToken(signUpToken)
 	if err != nil {
 		return err
@@ -78,23 +78,23 @@ func (self impl) confirmSignUp(signUpToken string) error {
 	return nil
 }
 
-func (self impl) requestResetPasswordToken(domain, email string) (resetPasswordToken string, err error) {
+func (self impl) RequestResetPasswordToken(domain, email string) (resetPasswordToken string, err error) {
 	return "", nil
 }
 
-func (self impl) resetPassword(resetPasswordToken string, newPassword []byte) error {
+func (self impl) ResetPassword(resetPasswordToken string, newPassword []byte) error {
 	return nil
 }
 
-func (self impl) signIn(domain, email string, password []byte) (sessionToken string, err error) {
+func (self impl) SignIn(domain, email string, password []byte) (sessionToken string, err error) {
 	return "", nil
 }
 
-func (self impl) changeEmail(sessionToken string, password []byte, newEmail string) error {
+func (self impl) ChangeEmail(sessionToken string, password []byte, newEmail string) error {
 	return nil
 }
 
-func (self impl) changePassword(sessionToken string, oldPassword []byte, newPassword []byte) error {
+func (self impl) ChangePassword(sessionToken string, oldPassword []byte, newPassword []byte) error {
 	return nil
 }
 
