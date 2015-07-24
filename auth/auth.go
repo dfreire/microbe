@@ -71,7 +71,7 @@ func (self impl) ConfirmSignUp(signUpToken string) error {
 	}
 
 	user.isConfirmed = true
-	if err = self.store.updateUser(user, []string{"isConfirmed"}); err != nil {
+	if err = self.store.updateUser(user); err != nil {
 		return err
 	}
 
