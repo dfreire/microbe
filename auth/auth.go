@@ -23,19 +23,19 @@ type Auth interface {
 	//RemoveUsers(adminToken, users []User) error
 }
 
-type impl struct {
+type implAuth struct {
 	store      store
 	adminToken string
 }
 
 func New(store store, adminToken string) Auth {
-	return &impl{
+	return &implAuth{
 		store:      store,
 		adminToken: adminToken,
 	}
 }
 
-func (self impl) SignUp(domain, email string, password []byte) (signUpToken string, err error) {
+func (self implAuth) SignUp(domain, email string, password []byte) (signUpToken string, err error) {
 	if err = self.assertCanCreateUser(domain, email); err != nil {
 		return "", err
 	}
@@ -59,7 +59,7 @@ func (self impl) SignUp(domain, email string, password []byte) (signUpToken stri
 	return signUpToken, nil
 }
 
-func (self impl) ConfirmSignUp(signUpToken string) error {
+func (self implAuth) ConfirmSignUp(signUpToken string) error {
 	domain, email, err := parseSignUpToken(signUpToken)
 	if err != nil {
 		return err
@@ -78,27 +78,27 @@ func (self impl) ConfirmSignUp(signUpToken string) error {
 	return nil
 }
 
-func (self impl) RequestResetPasswordToken(domain, email string) (resetPasswordToken string, err error) {
+func (self implAuth) RequestResetPasswordToken(domain, email string) (resetPasswordToken string, err error) {
 	return "", nil
 }
 
-func (self impl) ResetPassword(resetPasswordToken string, newPassword []byte) error {
+func (self implAuth) ResetPassword(resetPasswordToken string, newPassword []byte) error {
 	return nil
 }
 
-func (self impl) SignIn(domain, email string, password []byte) (sessionToken string, err error) {
+func (self implAuth) SignIn(domain, email string, password []byte) (sessionToken string, err error) {
 	return "", nil
 }
 
-func (self impl) ChangeEmail(sessionToken string, password []byte, newEmail string) error {
+func (self implAuth) ChangeEmail(sessionToken string, password []byte, newEmail string) error {
 	return nil
 }
 
-func (self impl) ChangePassword(sessionToken string, oldPassword []byte, newPassword []byte) error {
+func (self implAuth) ChangePassword(sessionToken string, oldPassword []byte, newPassword []byte) error {
 	return nil
 }
 
-func (self impl) assertCanCreateUser(domain, email string) error {
+func (self implAuth) assertCanCreateUser(domain, email string) error {
 	_, err := self.store.getUser(domain, email)
 	if err != nil {
 		if err.Error() == ErrEntityNotFound {
