@@ -9,6 +9,8 @@ type Auth interface {
 	SignUp(domain, email string, password []byte) (signUpToken string, err error)
 	ConfirmSignUp(signUpToken string) error
 
+	// RemoveUnconfirmedUsers(elapsedTime time.Duration) error
+
 	RequestResetPasswordToken(domain, email string) (resetPasswordToken string, err error)
 	ResetPassword(resetPasswordToken string, newPassword []byte) error
 
