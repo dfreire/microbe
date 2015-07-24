@@ -1,10 +1,6 @@
 package auth
 
-import (
-	"errors"
-
-	"github.com/satori/go.uuid"
-)
+import "github.com/satori/go.uuid"
 
 type store interface {
 	getUser(domain, email string) (User, error)
@@ -28,9 +24,6 @@ func (self implStoreMem) getUser(domain, email string) (User, error) {
 			user = existentUser
 			break
 		}
-	}
-	if user.Id == "" {
-		return user, errors.New(ErrEntityNotFound)
 	}
 	return user, nil
 }

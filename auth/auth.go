@@ -108,19 +108,6 @@ func (self implAuth) ChangePassword(sessionToken string, oldPassword []byte, new
 	return nil
 }
 
-func (self implAuth) assertCanCreateUser(domain, email string) error {
-	_, err := self.store.getUser(domain, email)
-	if err != nil {
-		if err.Error() == ErrEntityNotFound {
-			return nil
-		} else {
-			return err
-		}
-	}
-
-	return errors.New(ErrEntityAlreadyExists)
-}
-
 func createSignUpToken(domain, email string) (signUpToken string, err error) {
 	return "", nil
 }
