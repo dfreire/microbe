@@ -38,27 +38,35 @@ func New(store store, adminToken string) Auth {
 }
 
 func (self implAuth) SignUp(domain, email string, password []byte) (signUpToken string, err error) {
-	if err = self.assertCanCreateUser(domain, email); err != nil {
-		return "", err
-	}
-
-	signUpToken, err = createSignUpToken(domain, email)
+	user, err := self.store.getUser(domain, email)
 	if err != nil {
 		return "", err
 	}
 
-	user := User{
-		CreatedAt:   time.Now(),
-		Domain:      domain,
-		Email:       email,
-		password:    password,
-		isConfirmed: false,
-	}
-	if err = self.store.createUser(user); err != nil {
-		return "", err
+	if user.Id == nil {
+		// new user
+		user = User{
+			CreatedAt:   time.Now(),
+			Domain:      domain,
+			Email:       email,
+			password:    password,
+			isConfirmed: false,
+		}
+		if err = self.store.createUser(user); err != nil {
+			return "", err
+		}
+
+	} else {
+		// user exists
+		if user.Domain == domain && user.Email == email && !user.isConfirmed {
+			// an unconfirmed user is trying to sign up again
+			// do nothing, so a valid signUpToken will be returned
+		} else {
+			return "", errors.New(ErrEntityAlreadyExists)
+		}
 	}
 
-	return signUpToken, nil
+	return createSignUpToken(domain, email)
 }
 
 func (self implAuth) ConfirmSignUp(signUpToken string) error {
