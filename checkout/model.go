@@ -6,6 +6,7 @@ type Product struct {
 }
 
 type Address struct {
+	Id           interface{}
 	FullName     string
 	CompanyName  string
 	AddressLine1 string
@@ -18,6 +19,7 @@ type Address struct {
 }
 
 type Customer struct {
-	UserId interface{}
-	Name   string
+	UserId      interface{}
+	Name        string
+	AdressesIds []interface{}
 }
