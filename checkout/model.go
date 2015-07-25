@@ -1,5 +1,6 @@
 package checkout
 
-type Produtct struct {
-	Id interface{}
+type Product struct {
+	Id    interface{}
+	Price int
 }
