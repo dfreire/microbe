@@ -1,11 +1,13 @@
 package checkout
 
 type Order struct {
+	Id                interface{}
 	productIds        []interface{}
 	customerId        interface{}
 	invoiceAddressId  interface{}
 	deliveryAddressId interface{}
 	paymentMethod     PaymentMethod
+	status            OrderStatus
 }
 
 type Product struct {
@@ -37,4 +39,14 @@ type PaymentMethod int
 const (
 	CreditCard PaymentMethod = iota
 	BankTransfer
+	ATMTrasnfer
+)
+
+type OrderStatus int
+
+const (
+	Placed OrderStatus = iota
+	PaymentPending
+	PaymentUnauthorized
+	Delivered
 )
