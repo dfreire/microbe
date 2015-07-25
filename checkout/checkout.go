@@ -1,7 +1,7 @@
 package checkout
 
 type Checkout interface {
-	Checkout(customer Customer, address Address, products []Product) error
+	PlaceOrder(order Order) error
 }
 
 type implCheckout struct {
@@ -14,6 +14,6 @@ func New(store store) Checkout {
 	}
 }
 
-func (self implCheckout) Checkout(customer Customer, address Address, products []Product) error {
+func (self implCheckout) PlaceOrder(order Order) error {
 	return nil
 }

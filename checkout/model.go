@@ -1,8 +1,22 @@
 package checkout
 
+type Order struct {
+	productIds        []interface{}
+	customerId        interface{}
+	invoiceAddressId  interface{}
+	deliveryAddressId interface{}
+	paymentMethod     PaymentMethod
+}
+
 type Product struct {
 	Id    interface{}
 	Price int
+}
+
+type Customer struct {
+	UserId    interface{}
+	Name      string
+	AdressIds []interface{}
 }
 
 type Address struct {
@@ -18,8 +32,9 @@ type Address struct {
 	PhoneNumber  string
 }
 
-type Customer struct {
-	UserId      interface{}
-	Name        string
-	AdressesIds []interface{}
-}
+type PaymentMethod int
+
+const (
+	CreditCard PaymentMethod = iota
+	BankTransfer
+)
