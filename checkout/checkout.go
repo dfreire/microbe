@@ -4,8 +4,9 @@ type Checkout interface {
 }
 
 type implCheckout struct {
+	store store
 }
 
-func New() Checkout {
+func New(store store) Checkout {
 	return &implCheckout{}
 }
