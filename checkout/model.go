@@ -48,5 +48,6 @@ const (
 	Placed OrderStatus = iota
 	PaymentPending
 	PaymentUnauthorized
+	Sent
 	Delivered
 )
