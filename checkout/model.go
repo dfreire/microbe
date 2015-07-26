@@ -6,6 +6,7 @@ type Order struct {
 	customerId        interface{}
 	invoiceAddressId  interface{}
 	deliveryAddressId interface{}
+	deliveryMethod    DeliveryMethod
 	paymentMethod     PaymentMethod
 	status            OrderStatus
 }
@@ -40,6 +41,13 @@ const (
 	CreditCard PaymentMethod = iota
 	BankTransfer
 	ATMTrasnfer
+)
+
+type DeliveryMethod int
+
+const (
+	CTTEconomic DeliveryMethod = iota
+	CTTExpress
 )
 
 type OrderStatus int
