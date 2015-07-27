@@ -53,9 +53,9 @@ const (
 type OrderStatus int
 
 const (
-	Placed OrderStatus = iota
-	PaymentPending
+	PaymentPending OrderStatus = iota
 	PaymentUnauthorized
+	Confirmed
 	Sent
 	Delivered
 )
