@@ -1,14 +1,17 @@
 package checkout
 
+import "time"
+
 type Order struct {
 	Id                interface{}
-	Lines             []OrderLine
+	CreatedAt         time.Time
 	CustomerId        interface{}
 	InvoiceAddressId  interface{}
 	DeliveryAddressId interface{}
 	DeliveryMethod    DeliveryMethod
-	paymentMethod     PaymentMethod
-	status            OrderStatus
+	Lines             []OrderLine
+	PaymentMethod     PaymentMethod
+	Status            OrderStatus
 }
 
 type OrderLine struct {
