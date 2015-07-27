@@ -2,13 +2,19 @@ package checkout
 
 type Order struct {
 	Id                interface{}
-	productIds        []interface{}
-	customerId        interface{}
-	invoiceAddressId  interface{}
-	deliveryAddressId interface{}
-	deliveryMethod    DeliveryMethod
+	Lines             []OrderLine
+	CustomerId        interface{}
+	InvoiceAddressId  interface{}
+	DeliveryAddressId interface{}
+	DeliveryMethod    DeliveryMethod
 	paymentMethod     PaymentMethod
 	status            OrderStatus
+}
+
+type OrderLine struct {
+	ProductId interface{}
+	Quantity  int
+	Price     int
 }
 
 type Product struct {
