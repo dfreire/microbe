@@ -22,8 +22,10 @@ type OrderLine struct {
 }
 
 type Product struct {
-	Id    interface{}
-	Price int
+	Id                     interface{}
+	Price                  int
+	AvailableQuantity      int
+	OrderAllocatedQuantity int
 }
 
 type Customer struct {
@@ -64,6 +66,7 @@ type OrderStatus int
 
 const (
 	ORDER_STATUS_PENDING OrderStatus = iota
+	ORDER_STATUS_ABORTED
 	ORDER_STATUS_CONFIRMED
 	ORDER_STATUS_SENT
 	ORDER_STATUS_DELIVERED
