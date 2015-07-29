@@ -22,10 +22,10 @@ type OrderLine struct {
 }
 
 type Product struct {
-	Id                     interface{}
-	Price                  int
-	AvailableQuantity      int
-	OrderAllocatedQuantity int
+	Id                interface{}
+	Price             int
+	AvailableQuantity int
+	AllocatedQuantity int
 }
 
 type Customer struct {
