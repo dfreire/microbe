@@ -24,7 +24,7 @@ type OrderLine struct {
 type Product struct {
 	Id                interface{}
 	Price             int
-	AvailableQuantity int
+	StockQuantity     int
 	AllocatedQuantity int
 }
 
