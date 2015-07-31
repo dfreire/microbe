@@ -28,6 +28,10 @@ type Product struct {
 	AllocatedQuantity int
 }
 
+func (self Product) getAvailableQuantity() int {
+	return self.StockQuantity - self.AllocatedQuantity
+}
+
 type Customer struct {
 	UserId    interface{}
 	Name      string
