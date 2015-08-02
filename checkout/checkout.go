@@ -15,5 +15,5 @@ func New(store store) Checkout {
 }
 
 func (self implCheckout) PlaceOrder(order Order) error {
-	return nil
+	return self.store.createOrder(order)
 }
