@@ -17,3 +17,11 @@ func New(store store) Checkout {
 func (self implCheckout) PlaceOrder(order Order) error {
 	return self.store.createOrder(order)
 }
+
+func (self implCheckout) onPaymentAuthorized(orderId interface{}) error {
+	return nil
+}
+
+func (self implCheckout) onPaymentUnauthorized(orderId interface{}) error {
+	return nil
+}
