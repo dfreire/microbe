@@ -11,8 +11,7 @@ type Order struct {
 	DeliveryMethod    DeliveryMethod
 	PaymentMethod     PaymentMethod
 	Lines             []OrderLine
-	OrderStatus       OrderStatus
-	PaymentStatus     PaymentStatus
+	Status            OrderStatus
 }
 
 type OrderLine struct {
@@ -69,17 +68,9 @@ const (
 type OrderStatus int
 
 const (
-	ORDER_STATUS_PENDING OrderStatus = iota
-	ORDER_STATUS_ABORTED
-	ORDER_STATUS_CONFIRMED
+	ORDER_STATUS_PAYMENT_PENDING OrderStatus = iota
+	ORDER_STATUS_PAYMENT_UNAUTHORIZED
+	ORDER_STATUS_PAYMENT_AUTHORIZED
 	ORDER_STATUS_SENT
 	ORDER_STATUS_DELIVERED
-)
-
-type PaymentStatus int
-
-const (
-	PAYMENT_STATUS_PENDING PaymentStatus = iota
-	PAYMENT_STATUS_UNAUTHORIZED
-	PAYMENT_STATUS_AUTHORIZED
 )
