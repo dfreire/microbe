@@ -29,5 +29,10 @@ func (self implCheckout) onPaymentAuthorized(orderId interface{}) error {
 }
 
 func (self implCheckout) onPaymentUnauthorized(orderId interface{}) error {
-	return nil
+	order, err := self.store.getOrder(orderId)
+	if err != nil {
+		return err
+	}
+
+	return self.store.updateOrderStatus(order, ORDER_STATUS_PAYMENT_UNAUTHORIZED)
 }
