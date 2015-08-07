@@ -15,7 +15,7 @@ func New(store store) Checkout {
 }
 
 func (self implCheckout) PlaceOrder(order Order) error {
-	order.Status = ORDER_STATUS_PAYMENT_PENDING
+	order.Status = PAYMENT_PENDING
 	return self.store.createOrder(order)
 }
 
@@ -25,7 +25,7 @@ func (self implCheckout) onPaymentAuthorized(orderId interface{}) error {
 		return err
 	}
 
-	return self.store.updateOrderStatus(order, ORDER_STATUS_PAYMENT_AUTHORIZED)
+	return self.store.updateOrderStatus(order, PAYMENT_AUTHORIZED)
 }
 
 func (self implCheckout) onPaymentUnauthorized(orderId interface{}) error {
@@ -34,5 +34,5 @@ func (self implCheckout) onPaymentUnauthorized(orderId interface{}) error {
 		return err
 	}
 
-	return self.store.updateOrderStatus(order, ORDER_STATUS_PAYMENT_UNAUTHORIZED)
+	return self.store.updateOrderStatus(order, PAYMENT_UNAUTHORIZED)
 }
