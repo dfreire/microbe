@@ -1,25 +1,25 @@
 package checkout
 
-type Checkout interface {
-	PlaceOrder(order Order) error
+type Service interface {
+	Checkout(order Order) error
 }
 
-type implCheckout struct {
+type implService struct {
 	store store
 }
 
-func New(store store) Checkout {
-	return &implCheckout{
+func New(store store) Service {
+	return &implService{
 		store: store,
 	}
 }
 
-func (self implCheckout) PlaceOrder(order Order) error {
+func (self implService) Checkout(order Order) error {
 	order.Status = PAYMENT_PENDING
 	return self.store.createOrder(order)
 }
 
-func (self implCheckout) onPaymentAuthorized(orderId interface{}) error {
+func (self implService) onPaymentAuthorized(orderId interface{}) error {
 	order, err := self.store.getOrder(orderId)
 	if err != nil {
 		return err
@@ -28,7 +28,7 @@ func (self implCheckout) onPaymentAuthorized(orderId interface{}) error {
 	return self.store.updateOrderStatus(order, PAYMENT_AUTHORIZED)
 }
 
-func (self implCheckout) onPaymentUnauthorized(orderId interface{}) error {
+func (self implService) onPaymentUnauthorized(orderId interface{}) error {
 	order, err := self.store.getOrder(orderId)
 	if err != nil {
 		return err
