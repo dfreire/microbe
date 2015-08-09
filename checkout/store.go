@@ -5,3 +5,6 @@ type store interface {
 	createOrder(order Order) error
 	updateOrderStatus(order Order, status OrderStatus) error
 }
+
+type implStore struct {
+}
