@@ -8,7 +8,7 @@ type implService struct {
 	store store
 }
 
-func New(store store) Service {
+func NewService(store store) Service {
 	return &implService{
 		store: store,
 	}
